@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
+import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
-import { VitePWA } from 'vite-plugin-pwa'
+import {VitePWA} from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
@@ -37,7 +37,10 @@ export default defineConfig({
         ]
       },
       workbox: {
-        navigateFallback: '/DeltaCash---Organizador-Financeiro/index.html'
+        navigateFallback: '/DeltaCash---Organizador-Financeiro/index.html',
+        navigateFallbackDenylist: [
+          /\.png$/, /\.jpg$/, /\.jpeg$/, /\.svg$/, /\.webp$/, /\.ico$/, /\.json$/
+        ]
       }
     })
   ],
