@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { formatCurrencyInput, parseCurrencyInput } from '../utils/currencyUtils';
+import React from 'react';
+import { formatBRLCents, unmask } from '../utils/currencyUtils';
 
 interface CurrencyInputProps {
   value: number;
@@ -9,29 +9,37 @@ interface CurrencyInputProps {
 }
 
 export function CurrencyInput({ value, onChange, placeholder, className }: CurrencyInputProps) {
-  const [displayValue, setDisplayValue] = useState('');
-
-  useEffect(() => {
-    if (value === 0) {
-      setDisplayValue('');
-    } else {
-      setDisplayValue(formatCurrencyInput((value * 100).toString()));
-    }
-  }, [value]);
+  // Convert numeric value to formatted display value
+  const getDisplayValue = (numericValue: number): string => {
+    if (numericValue === 0) return '';
+    // Convert to cents and format
+    const cents = Math.round(numericValue * 100).toString();
+    return formatBRLCents(cents);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
-    const formatted = formatCurrencyInput(inputValue);
-    setDisplayValue(formatted);
+    const digits = unmask(inputValue);
     
-    const numericValue = parseCurrencyInput(formatted);
+    // Limit to reasonable number of digits (9 digits = up to 99,999.99)
+    const limitedDigits = digits.length > 9 ? digits.slice(0, 9) : digits;
+    
+    if (!limitedDigits) {
+      onChange(0);
+      return;
+    }
+    
+    // Convert cents to reais
+    const numericValue = Number(limitedDigits) / 100;
     onChange(numericValue);
   };
 
   return (
     <input
       type="text"
-      value={displayValue}
+      inputMode="numeric"
+      pattern="\d*"
+      value={getDisplayValue(value)}
       onChange={handleChange}
       placeholder={placeholder}
       className={className}

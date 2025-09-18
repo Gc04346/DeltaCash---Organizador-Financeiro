@@ -11,6 +11,12 @@ export function BudgetConfig() {
   const [installments, setInstallments] = useState(budgetConfig.installments);
   const [showHelp, setShowHelp] = useState(false);
 
+  // Update local state when budgetConfig changes
+  React.useEffect(() => {
+    setMonthlyTotal(budgetConfig.monthlyTotal);
+    setInstallments(budgetConfig.installments);
+  }, [budgetConfig]);
+
   const handleAddInstallment = () => {
     const newInstallment: Installment = {
       id: Date.now().toString(),
