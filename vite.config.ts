@@ -1,11 +1,15 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+// URL final: https://gc04346.github.io/DeltaCash---Organizador-Financeiro/
 export default defineConfig({
-  base: '/DeltaCash---Organizador-Financeiro/',
   plugins: [react()],
+  base: '/DeltaCash---Organizador-Financeiro/',
+  build: {
+    outDir: 'docs',        // build direto na pasta servida pelo Pages
+    assetsDir: 'assets'    // opcional, só pra manter organizado
+  },
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-});
+})
