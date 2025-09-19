@@ -17,10 +17,10 @@ export function Navigation({ currentView, setCurrentView }: NavigationProps) {
     <nav className="bg-white shadow-lg border-b">
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={() => setCurrentView('dashboard')}>
             <h1 className="text-xl font-bold text-gray-800">Orçamento Lazer</h1>
           </div>
-          
+
           <div className="flex space-x-1">
             {navItems.map(({ id, label, icon: Icon }) => (
               <button
