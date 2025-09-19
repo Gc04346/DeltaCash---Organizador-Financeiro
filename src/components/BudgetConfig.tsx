@@ -22,7 +22,7 @@ export function BudgetConfig() {
       id: Date.now().toString(),
       description: '',
       amount: 0,
-      remainingMonths: 1,
+      remainingMonths: 0,
       isRecurring: false,
     };
     setInstallments([newInstallment, ...installments]);
@@ -33,7 +33,7 @@ export function BudgetConfig() {
   };
 
   const handleUpdateInstallment = (id: string, field: keyof Installment, value: string | number | boolean) => {
-    setInstallments(installments.map(inst => 
+    setInstallments(installments.map(inst =>
       inst.id === id ? { ...inst, [field]: value } : inst
     ));
   };
@@ -50,8 +50,6 @@ export function BudgetConfig() {
   const netBudget = monthlyTotal - totalInstallments;
   const weeklyBudget = netBudget / 4;
 
-  const recurringInstallments = installments.filter(inst => inst.isRecurring);
-  const regularInstallments = installments.filter(inst => !inst.isRecurring);
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-lg p-6">
@@ -96,131 +94,93 @@ export function BudgetConfig() {
               </p>
             ) : (
               <div className="space-y-4">
-                {recurringInstallments.length > 0 && (
-                  <div>
+                {installments.map((installment) => (
+                  <div
+                    key={installment.id}
+                    className={`p-4 border rounded-lg ${
+                      installment.isRecurring 
+                        ? 'border-green-200 bg-green-50' 
+                        : 'border-blue-200 bg-blue-50'
+                    }`}
+                  >
                     <div className="flex items-center gap-2 mb-3">
-                      <Repeat className="h-4 w-4 text-green-600" />
-                      <h4 className="text-md font-medium text-gray-700">Gastos Recorrentes</h4>
+                      {installment.isRecurring ? (
+                        <>
+                          <Repeat className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium text-green-700">Gasto Recorrente</span>
+                        </>
+                      ) : (
+                        <>
+                          <Calendar className="h-4 w-4 text-blue-600" />
+                          <span className="text-sm font-medium text-blue-700">Parcela Fixa</span>
+                        </>
+                      )}
                     </div>
-                    <div className="space-y-4">
-                      {recurringInstallments.map((installment) => (
-                        <div key={installment.id} className="p-4 border border-green-200 bg-green-50 rounded-lg">
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Descrição
-                              </label>
-                              <input
-                                type="text"
-                                value={installment.description}
-                                onChange={(e) => handleUpdateInstallment(installment.id, 'description', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Ex: Netflix, Spotify..."
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Valor Mensal
-                              </label>
-                              <CurrencyInput
-                                value={installment.amount}
-                                onChange={(value) => handleUpdateInstallment(installment.id, 'amount', value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="R$ 0,00"
-                              />
-                            </div>
-                            <div className="flex items-end gap-2">
-                              <div className="flex items-center gap-2 flex-1">
-                                <input
-                                  type="checkbox"
-                                  checked={installment.isRecurring}
-                                  onChange={(e) => handleUpdateInstallment(installment.id, 'isRecurring', e.target.checked)}
-                                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label className="text-xs text-gray-600">Recorrente</label>
-                              </div>
-                              <button
-                                onClick={() => handleRemoveInstallment(installment.id)}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
-                {regularInstallments.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Calendar className="h-4 w-4 text-blue-600" />
-                      <h4 className="text-md font-medium text-gray-700">Parcelas Fixas</h4>
-                    </div>
                     <div className="space-y-4">
-                      {regularInstallments.map((installment) => (
-                        <div key={installment.id} className="p-4 border border-blue-200 bg-blue-50 rounded-lg">
-                          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Descrição
-                              </label>
-                              <input
-                                type="text"
-                                value={installment.description}
-                                onChange={(e) => handleUpdateInstallment(installment.id, 'description', e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="Ex: Celular, Cartão..."
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Valor da Parcela
-                              </label>
-                              <CurrencyInput
-                                value={installment.amount}
-                                onChange={(value) => handleUpdateInstallment(installment.id, 'amount', value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="R$ 0,00"
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-xs font-medium text-gray-600 mb-1">
-                                Meses Restantes
-                              </label>
-                              <input
-                                type="number"
-                                value={installment.remainingMonths}
-                                onChange={(e) => handleUpdateInstallment(installment.id, 'remainingMonths', Number(e.target.value))}
-                                min="1"
-                                className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              />
-                            </div>
-                            <div className="flex items-end gap-2">
-                              <div className="flex items-center gap-2 flex-1">
-                                <input
-                                  type="checkbox"
-                                  checked={installment.isRecurring}
-                                  onChange={(e) => handleUpdateInstallment(installment.id, 'isRecurring', e.target.checked)}
-                                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                                <label className="text-xs text-gray-600">Recorrente</label>
-                              </div>
-                              <button
-                                onClick={() => handleRemoveInstallment(installment.id)}
-                                className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </button>
-                            </div>
-                          </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">
+                          Descrição
+                        </label>
+                        <input
+                          type="text"
+                          value={installment.description}
+                          onChange={(e) => handleUpdateInstallment(installment.id, 'description', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder={installment.isRecurring ? "Ex: Netflix, Spotify..." : "Ex: Celular, Cartão..."}
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-medium text-gray-600 mb-1">
+                            {installment.isRecurring ? 'Valor Mensal' : 'Valor da Parcela'}
+                          </label>
+                          <CurrencyInput
+                            value={installment.amount}
+                            onChange={(value) => handleUpdateInstallment(installment.id, 'amount', value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="0,00"
+                          />
                         </div>
-                      ))}
+
+                        {!installment.isRecurring && (
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1">
+                              Meses Restantes
+                            </label>
+                            <input
+                              type="number"
+                              value={installment.remainingMonths || ''}
+                              onChange={(e) => handleUpdateInstallment(installment.id, 'remainingMonths', Number(e.target.value))}
+                              min="1"
+                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="0"
+                            />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            checked={installment.isRecurring}
+                            onChange={(e) => handleUpdateInstallment(installment.id, 'isRecurring', e.target.checked)}
+                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          />
+                          <label className="text-xs text-gray-600">Recorrente</label>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveInstallment(installment.id)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                )}
+                ))}
               </div>
             )}
           </div>
