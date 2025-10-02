@@ -2,20 +2,21 @@ import React, { useState } from 'react';
 import { PlusCircle, AlertCircle } from 'lucide-react';
 import { useBudget } from '../hooks/useBudget';
 import { formatCurrency } from '../utils/currencyUtils';
+import { CurrencyInput } from './CurrencyInput';
 
 export function ExpenseRegister() {
   const { addExpense, currentWeekBalance } = useBudget();
   const [expenseType, setExpenseType] = useState<'daily' | 'weekly'>('daily');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
 
   const placeholder = expenseType === 'daily' ? 'Digite o gasto do dia' : 'Digite o gasto da semana';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const expenseAmount = parseFloat(amount);
-    
-    if (isNaN(expenseAmount) || expenseAmount <= 0) {
+    const expenseAmount = amount;
+
+    if (expenseAmount <= 0) {
       alert('Por favor, insira um valor válido');
       return;
     }
@@ -26,7 +27,7 @@ export function ExpenseRegister() {
     }
 
     addExpense(expenseAmount, expenseType);
-    setAmount('');
+    setAmount(0);
     alert('Gasto registrado com sucesso!');
   };
 
@@ -66,7 +67,7 @@ export function ExpenseRegister() {
                   <p className="text-sm text-gray-600">Registro diário</p>
                 </div>
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => setExpenseType('weekly')}
@@ -88,14 +89,11 @@ export function ExpenseRegister() {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Valor do Gasto
             </label>
-            <input
-              type="number"
-              step="0.01"
+            <CurrencyInput
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={setAmount}
               className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder={placeholder}
-              required
             />
           </div>
 
@@ -108,11 +106,11 @@ export function ExpenseRegister() {
                   {formatCurrency(currentWeekBalance.balance)}
                 </span>
               </div>
-              {amount && !isNaN(parseFloat(amount)) && (
+              {amount > 0 && (
                 <div className="flex justify-between font-medium text-blue-600 border-t pt-2">
                   <span>Saldo após registro:</span>
-                  <span className={currentWeekBalance.balance - parseFloat(amount) >= 0 ? 'text-green-600' : 'text-red-600'}>
-                    {formatCurrency(currentWeekBalance.balance - parseFloat(amount))}
+                  <span className={currentWeekBalance.balance - amount >= 0 ? 'text-green-600' : 'text-red-600'}>
+                    {formatCurrency(currentWeekBalance.balance - amount)}
                   </span>
                 </div>
               )}

@@ -1,14 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
-import { BudgetConfig, Expense, WeeklyBalance, MonthlyData } from '../types';
-import { 
-  getCurrentWeek, 
-  getCurrentMonth, 
+import { BudgetConfig, Expense, MonthlyData } from '../types';
+import {
+  getCurrentMonth,
   getCurrentYear,
   getWeekOfMonth,
   calculateWeeklyBalances,
-  getExpensesForCurrentWeek,
-  getExpensesForToday
+  getExpensesForToday,
+  getWeekKey
 } from '../utils/dateUtils';
 
 const initialBudgetConfig: BudgetConfig = {
@@ -19,11 +18,35 @@ const initialBudgetConfig: BudgetConfig = {
 export function useBudget() {
   const [budgetConfig, setBudgetConfig] = useLocalStorage<BudgetConfig>('budgetConfig', initialBudgetConfig);
   const [expenses, setExpenses] = useLocalStorage<Expense[]>('expenses', []);
+  const [lastWeekKey, setLastWeekKey] = useLocalStorage<string>('lastWeekKey', '');
   const [currentView, setCurrentView] = useState<'dashboard' | 'budget' | 'register'>('dashboard');
 
   const currentMonth = getCurrentMonth();
   const currentYear = getCurrentYear();
   const currentWeek = getWeekOfMonth();
+
+  // Check for week change and reset recent expenses if needed
+  useEffect(() => {
+    const currentWeekKey = getWeekKey();
+
+    if (lastWeekKey && lastWeekKey !== currentWeekKey) {
+      // Week has changed, clear recent expenses (keep only expenses older than 7 days)
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const filteredExpenses = expenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate <= sevenDaysAgo;
+      });
+
+      setExpenses(filteredExpenses);
+    }
+
+    // Update the last week key
+    if (currentWeekKey !== lastWeekKey) {
+      setLastWeekKey(currentWeekKey);
+    }
+  }, [expenses, lastWeekKey, setExpenses, setLastWeekKey]);
 
   const monthlyData = useMemo((): MonthlyData => {
     const totalInstallments = budgetConfig.installments.reduce((sum, inst) => sum + inst.amount, 0);
