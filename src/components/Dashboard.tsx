@@ -99,7 +99,8 @@ export function Dashboard() {
               <div key={expense.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                 <div>
                   <p className="text-sm font-medium text-gray-800">
-                    {expense.type === 'daily' ? 'Gasto Diário' : 'Gasto Semanal'}
+                    {/*{expense.type === 'daily' ? 'Gasto Diário' : 'Gasto Semanal'}*/}
+                    Gasto de
                   </p>
                   <p className="text-xs text-gray-600">{formatDate(expense.date)}</p>
                 </div>
@@ -117,8 +118,8 @@ export function Dashboard() {
         <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumo das Semanas</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {monthlyData.weeks.map((week, index) => (
-            <div 
-              key={week.week} 
+            <div
+              key={week.week}
               className={`p-4 rounded-lg border-2 ${
                 week.week === currentWeekBalance.week 
                   ? 'border-blue-500 bg-blue-50' 

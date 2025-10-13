@@ -75,7 +75,7 @@ export function getExpensesForToday(expenses: Expense[]): Expense[] {
 
   return expenses.filter(expense => {
     const expenseDate = new Date(expense.date).toDateString();
-    return expenseDate === today && expense.type === 'daily';
+    return expenseDate === today;
   });
 }
 

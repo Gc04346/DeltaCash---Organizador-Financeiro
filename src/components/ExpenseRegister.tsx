@@ -7,7 +7,7 @@ import { CurrencyInput } from './CurrencyInput';
 export function ExpenseRegister() {
   const { addExpense, currentWeekBalance } = useBudget();
   const [expenseType, setExpenseType] = useState<'daily' | 'weekly'>('daily');
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState<number>(0);
   const [showAlert, setShowAlert] = useState(false);
 
   const placeholder = expenseType === 'daily' ? 'Digite o gasto do dia' : 'Digite o gasto da semana';
@@ -48,42 +48,42 @@ export function ExpenseRegister() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Tipo de Registro
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setExpenseType('daily')}
-                className={`p-4 border-2 rounded-lg transition-all ${
-                  expenseType === 'daily'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                }`}
-              >
-                <div className="text-center">
-                  <p className="font-medium">Gasto do Dia</p>
-                  <p className="text-sm text-gray-600">Registro diário</p>
-                </div>
-              </button>
+          {/*<div>*/}
+          {/*  <label className="block text-sm font-medium text-gray-700 mb-3">*/}
+          {/*    Tipo de Registro*/}
+          {/*  </label>*/}
+          {/*  <div className="grid grid-cols-2 gap-4">*/}
+          {/*    <button*/}
+          {/*      type="button"*/}
+          {/*      onClick={() => setExpenseType('daily')}*/}
+          {/*      className={`p-4 border-2 rounded-lg transition-all ${*/}
+          {/*        expenseType === 'daily'*/}
+          {/*          ? 'border-blue-500 bg-blue-50 text-blue-700'*/}
+          {/*          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'*/}
+          {/*      }`}*/}
+          {/*    >*/}
+          {/*      <div className="text-center">*/}
+          {/*        <p className="font-medium">Gasto do Dia</p>*/}
+          {/*        <p className="text-sm text-gray-600">Registro diário</p>*/}
+          {/*      </div>*/}
+          {/*    </button>*/}
 
-              <button
-                type="button"
-                onClick={() => setExpenseType('weekly')}
-                className={`p-4 border-2 rounded-lg transition-all ${
-                  expenseType === 'weekly'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                }`}
-              >
-                <div className="text-center">
-                  <p className="font-medium">Gasto da Semana</p>
-                  <p className="text-sm text-gray-600">Registro semanal</p>
-                </div>
-              </button>
-            </div>
-          </div>
+          {/*    <button*/}
+          {/*      type="button"*/}
+          {/*      onClick={() => setExpenseType('weekly')}*/}
+          {/*      className={`p-4 border-2 rounded-lg transition-all ${*/}
+          {/*        expenseType === 'weekly'*/}
+          {/*          ? 'border-blue-500 bg-blue-50 text-blue-700'*/}
+          {/*          : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'*/}
+          {/*      }`}*/}
+          {/*    >*/}
+          {/*      <div className="text-center">*/}
+          {/*        <p className="font-medium">Gasto da Semana</p>*/}
+          {/*        <p className="text-sm text-gray-600">Registro semanal</p>*/}
+          {/*      </div>*/}
+          {/*    </button>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -93,7 +93,7 @@ export function ExpenseRegister() {
               value={amount}
               onChange={setAmount}
               className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder={placeholder}
+              placeholder="0,00"
             />
           </div>
 
