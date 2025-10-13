@@ -3,6 +3,7 @@ import { PlusCircle, AlertCircle } from 'lucide-react';
 import { useBudget } from '../hooks/useBudget';
 import { formatCurrency } from '../utils/currencyUtils';
 import { CurrencyInput } from './CurrencyInput';
+import {showToast} from "../utils/showToast.ts";
 
 export function ExpenseRegister() {
   const { addExpense, currentWeekBalance } = useBudget();
@@ -17,7 +18,7 @@ export function ExpenseRegister() {
     const expenseAmount = amount;
 
     if (expenseAmount <= 0) {
-      alert('Por favor, insira um valor válido');
+      showToast('Por favor, insira um valor válido', 'error');
       return;
     }
 
@@ -28,7 +29,7 @@ export function ExpenseRegister() {
 
     addExpense(expenseAmount, expenseType);
     setAmount(0);
-    alert('Gasto registrado com sucesso!');
+    showToast('Gasto registrado com sucesso!', 'success');
   };
 
   return (

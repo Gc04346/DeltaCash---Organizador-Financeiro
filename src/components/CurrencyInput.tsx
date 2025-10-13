@@ -20,15 +20,15 @@ export function CurrencyInput({ value, onChange, placeholder, className }: Curre
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     const digits = unmask(inputValue);
-    
+
     // Limit to reasonable number of digits (9 digits = up to 99,999.99)
     const limitedDigits = digits.length > 9 ? digits.slice(0, 9) : digits;
-    
+
     if (!limitedDigits) {
       onChange(0);
       return;
     }
-    
+
     // Convert cents to reais
     const numericValue = Number(limitedDigits) / 100;
     onChange(numericValue);
@@ -38,7 +38,7 @@ export function CurrencyInput({ value, onChange, placeholder, className }: Curre
     <input
       type="text"
       inputMode="numeric"
-      pattern="\d*"
+      // pattern="\d*"
       value={getDisplayValue(value)}
       onChange={handleChange}
       placeholder={placeholder}

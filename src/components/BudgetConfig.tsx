@@ -4,6 +4,7 @@ import { useBudget } from '../hooks/useBudget';
 import { CurrencyInput } from './CurrencyInput';
 import { Installment } from '../types';
 import { formatCurrency } from '../utils/currencyUtils';
+import {showToast} from "../utils/showToast.ts";
 
 export function BudgetConfig() {
   const { budgetConfig, updateBudgetConfig } = useBudget();
@@ -43,7 +44,7 @@ export function BudgetConfig() {
       monthlyTotal,
       installments,
     });
-    alert('Orçamento salvo com sucesso!');
+    showToast('Orçamento salvo com sucesso!', 'success');
   };
 
   const totalInstallments = installments.reduce((sum, inst) => sum + inst.amount, 0);

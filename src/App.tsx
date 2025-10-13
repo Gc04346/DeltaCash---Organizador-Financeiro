@@ -5,6 +5,7 @@ import { BudgetConfig } from './components/BudgetConfig';
 import { ExpenseRegister } from './components/ExpenseRegister';
 import { useBudget } from './hooks/useBudget';
 import { InstallButton } from './components/InstallButton'
+import {ToastContainer} from "react-toastify";
 
 function App() {
   const { currentView, setCurrentView } = useBudget();
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <ToastContainer/>
       <Navigation currentView={currentView} setCurrentView={setCurrentView} />
 
       <main className="max-w-4xl mx-auto px-4 py-8">
